@@ -2,7 +2,7 @@ version: "3"
 
 services:
   docmost:
-    image: docmost/docmost:latest
+    image: docmost-custom:latest
     environment:
       APP_URL: "https://doc.atoms.lk"
       APP_SECRET: "ff3ea16c1e39756186ad8eee1cf7f77a90f08d61b75eb273ced98d791f90f5c6"
