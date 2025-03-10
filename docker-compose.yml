@@ -1,39 +1,51 @@
-version: '3'
+version: "3"
 
 services:
   docmost:
     image: docmost/docmost:latest
-    depends_on:
-      - db
-      - redis
     environment:
-      APP_URL: 'http://localhost:3000'
-      APP_SECRET: 'REPLACE_WITH_LONG_SECRET'
-      DATABASE_URL: 'postgresql://docmost:STRONG_DB_PASSWORD@db:5432/docmost?schema=public'
-      REDIS_URL: 'redis://redis:6379'
+      APP_URL: "https://doc.atoms.lk"
+      APP_SECRET: "ff3ea16c1e39756186ad8eee1cf7f77a90f08d61b75eb273ced98d791f90f5c6"
+      DATABASE_URL: "postgresql://docmost:Ranabimaroyalxx@docmost-db:5432/docmost"
+      REDIS_URL: "redis://docmost-redis:6379"
     ports:
       - "3000:3000"
-    restart: unless-stopped
-    volumes:
-      - docmost:/app/data/storage
+    depends_on:
+      - docmost-db
+      - docmost-redis
+    networks:
+      - docmost-net
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
-  db:
+  docmost-db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: docmost
       POSTGRES_USER: docmost
-      POSTGRES_PASSWORD: STRONG_DB_PASSWORD
-    restart: unless-stopped
+      POSTGRES_PASSWORD: Ranabimaroyalxx
+      POSTGRES_DB: docmost
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - docmost_db_data:/var/lib/postgresql/data
+    networks:
+      - docmost-net
+    deploy:
+      resources:
+        limits:
+          memory: 256M
 
-  redis:
+  docmost-redis:
     image: redis:7.2-alpine
-    restart: unless-stopped
-    volumes:
-      - redis_data:/data
+    networks:
+      - docmost-net
+    deploy:
+      resources:
+        limits:
+          memory: 128M
 
 volumes:
-  docmost:
-  db_data:
-  redis_data:
+  docmost_db_data:
+
+networks:
+  docmost-net:
